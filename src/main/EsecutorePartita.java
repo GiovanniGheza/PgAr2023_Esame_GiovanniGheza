@@ -14,6 +14,10 @@ public class EsecutorePartita {
 			, new String[]{"Inizia una partita nel mondo", "Cambia il nome del personaggio",
 							"Visualizza Personaggio"});
 	private MyMenuGhz menuMovimento = new MyMenuGhz("Dove vuoi dirigerti viandante?");
+	private MyMenuGhz menuMondi = new MyMenuGhz("Sei di fronte al monolite dell'Arnaldo-verse, scegli un mondo in cui essere trasportato"
+							, new String[]{"Mondo del F", "Mondo A", "Mondo Pino"});
+	private ArrayList<Integer> mondiGiaVisitati = new ArrayList<Integer>();
+	private int mondoInQuestione;
 	
 	EsecutorePartita(Partita p){
 		partita = p;
@@ -45,7 +49,7 @@ public class EsecutorePartita {
 	
 	private void eseguiInizio() {
 		System.out.println("ARNALDO-VERSE\n\n");
-		System.out.println("");
+		System.out.println("Lasciati trasportare in un universo d'avventure, spada in mano e vai!");
 		
 		if(InputDatiGhz.yesOrNo("\nPronto a cominciare?")) {
 			System.out.println("Bene andiamo!");
@@ -71,6 +75,15 @@ public class EsecutorePartita {
 		while(continuaGioco) {
 			eseguiGioco();
 		}
+	}
+	
+	public void eseguiSceltaMondo() {
+		int n = menuMondi.scegli();
+		if( n == 0) {
+			continuaGioco = false;
+			return;
+		}
+		mondoInQuestione = n;
 	}
 	
 	private void eseguiSetUpGioco() {
@@ -136,11 +149,11 @@ public class EsecutorePartita {
 	private void eseguiCombattimento() throws InterruptedException {
 		ArrayList<String> cosaSuccesse = partita.combatti();
 		
-		//TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(1);
 		
 		System.out.println("Cammina cammina e arrivi a " + partita.getNomeDiDoveMiTrovo() + ".");
 		
-		//TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(3);
 		
 		System.out.println("Oh no! Ti sei imbattutto in un "
 							+ partita.getNomeMostroAffrontato()
@@ -148,7 +161,7 @@ public class EsecutorePartita {
 		
 		for(String src : cosaSuccesse) {
 			
-			//TimeUnit.SECONDS.sleep(1);
+			TimeUnit.SECONDS.sleep(2);
 			
 			if(src == "MORTE") {
 				eseguiBruttaFine();
@@ -162,17 +175,17 @@ public class EsecutorePartita {
 	private void eseguiModificaStatistiche() throws InterruptedException {
 		String str = partita.eseguiModificaStatistiche();
 		
-		//TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(1);
 		
 		System.out.println("Cammina cammina e arrivi a " + partita.getNomeDiDoveMiTrovo() + ".");
 		
-		//TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(3);
 		
 		System.out.println(str);
 		
 		if(!partita.isPersonaggioVivo()) {
 			
-			TimeUnit.SECONDS.sleep(1);
+			TimeUnit.SECONDS.sleep(2);
 			
 			System.out.println("La magia del luogo era troppo intensa per la anima martoriata, la sua forza "
 					+ "ti ha ucciso.");
@@ -180,6 +193,8 @@ public class EsecutorePartita {
 	}
 	
 	private void eseguiFine() throws InterruptedException {
+		if(mondiGiaVisitati.contains(mondoInQuestione));
+		
 		eseguiCombattimento();
 		System.out.println("Congratulazioni! Hai raggiunto la tua meta!");
 		System.out.println("Sconfiggendo Cammo hai guadagnato " + PUNTI_VITTORIA + " punti");
